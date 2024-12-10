@@ -2,9 +2,9 @@ name: CI for fair_sharer
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   test-matrix:
@@ -26,17 +26,14 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt || echo "No requirements.txt file found. Skipping dependencies installation."
+        pip install -r requirements.txt
 
     - name: Lint with Ruff
       run: |
         pip install ruff
-        ruff . || echo "Linting issues detected."
+        ruff src || echo "Linting issues detected."
 
     - name: Test with pytest
       run: |
         pip install pytest
-        pytest || echo "Some tests failed."
-
-
-
+        pytest src || echo "Some tests failed."
