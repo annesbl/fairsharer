@@ -1,40 +1,39 @@
-name: CI for fair_sharer
+name: Our first python CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
-  test-matrix:
+  test:
+    runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: [3.8, 3.9, 3.10, 3.11]
-    runs-on: ${{ matrix.os }}
+        python-version: [3.9, 3.10, 3.11]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-      - name: Lint with Ruff
-        run: |
-          pip install ruff
-          ruff src || echo "Linting issues detected."
+    - name: Lint with Ruff
+      run: |
+        ruff .
 
-      - name: Test with pytest
-        run: |
-          pip install pytest
-          pytest src || echo "Some tests failed."
+    - name: Test with pytest
+      run: |
+        pytest
 
