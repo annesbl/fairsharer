@@ -1,41 +1,38 @@
-name:our first Python CI
+name: Python CI with Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
-        python-version: ["3.8", "3.9", "3.10"]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: [3.8, 3.9, 3.10]
 
     steps:
-    
     - uses: actions/checkout@v3
-    
-    
+
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
 
-    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    
     - name: Lint with Ruff
       run: |
         ruff src/
 
-    
     - name: Run tests with pytest
       run: |
         pytest --maxfail=1 --disable-warnings -q
